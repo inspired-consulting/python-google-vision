@@ -1,0 +1,17 @@
+# Google Cloud secrets
+/gc_sa_key.json
+
+# Virtual Env
+/venv
+
+# Mac
+.DS_Store
+
+# Idea
+.idea/
+
+# Images
+images/
+
+# Cache
+__pycache__
