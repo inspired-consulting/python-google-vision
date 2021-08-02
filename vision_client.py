@@ -1,6 +1,6 @@
 from lib import vision
 from pathlib import Path
-
+import argparse
 
 def process(files):
     annotations = vision.annotate_images(files)
@@ -17,7 +17,12 @@ def image_files_in_dir(dir, max=100):
 
 
 if __name__ == '__main__':
-    images_files = image_files_in_dir('./images/indoor/clear/', 10)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--folder', dest='folder', type=str, required=True, help='The folder containing the images', )
+    parser.add_argument('-m', '--max-files', dest='max_files', type=int, required=False, default=10, help='Max number of images')
+    args = parser.parse_args()
+
+    images_files = image_files_in_dir(args.folder, args.max_files)
     process(images_files)
 
 
