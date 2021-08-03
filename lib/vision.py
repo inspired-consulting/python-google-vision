@@ -9,6 +9,8 @@ FEATURES = [
     vision.Feature(type_=vision.Feature.Type.IMAGE_PROPERTIES),
 ]
 
+CHUNK_SIZE = 10
+
 client = vision.ImageAnnotatorClient()
 
 
@@ -26,10 +28,21 @@ def annotate_image(path):
 
 
 def annotate_images(paths):
-    requests = list(map(__to_request, paths))
-    response = client.batch_annotate_images(requests=requests)
 
-    return list(zip(paths, response.responses))
+    chunks = chunk(paths, CHUNK_SIZE)
+
+    annotations = []
+
+    for c in chunks:
+        requests = list(map(__to_request, c))
+        response = client.batch_annotate_images(requests=requests)
+        annotations.extend(response.responses)
+
+    return list(zip(paths, annotations))
+
+
+def chunk(full_list, chunk_size):
+    return [full_list[i:i + chunk_size] for i in range(0, len(full_list), chunk_size)]
 
 
 def __to_request(path):
